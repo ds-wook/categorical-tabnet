@@ -2,18 +2,19 @@ n_splits: 10
 path: res/models/
 working: catabnet
 results: 10fold-catabnet-results.pkl
+multi_task: True
 params:
-  lr: 0.02
+  lr: 0.01
   step_size: 50
-  gamma: 1.2
-  n_d: 64
-  n_steps: 1
-  n_a: 64
-  lambda_sparse: 0.001
+  gamma: 1.5
+  n_d: 16
+  n_steps: 5
+  n_a: 16
+  lambda_sparse: 0.000001
   max_epochs: 1000
   patience: 10
-  batch_size: 4096
-  virtual_batch_size: 512
+  batch_size: 1024
+  virtual_batch_size: 128
   num_workers: 1
   mask_type: entmax
   verbose: 10
