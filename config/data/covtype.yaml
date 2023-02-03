@@ -6,6 +6,7 @@ seed: 42
 target: Cover_Type
 train: covtype.csv
 method: catboost
+test_size: 0.2
 drop_features:
   - Soil_Type7
   - Soil_Type15

@@ -9,8 +9,7 @@ from sklearn.preprocessing import StandardScaler
 
 from data.census import load_census_dataset
 from data.covtype import load_covtype_dataset
-from models.encoder import CatBoostCategoricalEncoder
-from models.regression import (
+from models.classification import (
     CatBoostClassificationTrainer,
     LightGBMClassificationTrainer,
     MlpClassificationTrainer,
@@ -18,6 +17,7 @@ from models.regression import (
     TabNetClassificationTrainer,
     XGBoostClassificationTrainer,
 )
+from models.encoder import CatBoostCategoricalEncoder
 from utils.evaluate import evaluate_metrics
 
 
