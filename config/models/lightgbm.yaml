@@ -1,0 +1,14 @@
+n_splits: 10
+params:
+  objective: regression
+  metric: rmse
+  learning_rate: 0.2
+  seed: 42
+  verbose: -1
+multi_task: True
+path: res/models/
+working: lightgbm
+results: 10fold-lightgbm-results.pkl
+early_stopping_rounds: 100
+num_boost_round: 10000
+verbose_eval: 100

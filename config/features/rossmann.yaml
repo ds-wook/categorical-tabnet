@@ -1,0 +1,9 @@
+cat_features:
+  - Store
+  - Promo
+  - Promo2
+  - DayOfWeek
+  - month
+  - day
+  - StoreType
+  - Assortment

@@ -1,0 +1,5 @@
+n_splits: 10
+path: res/models/
+working: rf
+results: 10fold-randomforest-results.pkl
+multi_task: True

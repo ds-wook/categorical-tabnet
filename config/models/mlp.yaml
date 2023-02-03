@@ -1,0 +1,5 @@
+n_splits: 10
+path: res/models/
+working: mlp
+results: 10fold-mlp-results.pkl
+multi_task: True

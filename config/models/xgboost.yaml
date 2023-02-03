@@ -1,0 +1,14 @@
+n_splits: 10
+params:
+  eta: 0.2
+  seed: 42
+  tree_method: gpu_hist
+  objective: reg:squarederror
+  eval_metric: rmse
+multi_task: False
+path: res/models/
+working: xgboost
+results: 10fold-xgboost-results.pkl
+early_stopping_rounds: 100
+num_boost_round: 10000
+verbose_eval: 100

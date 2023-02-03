@@ -1,0 +1,20 @@
+cat_features:
+  - workclass
+  - education
+  - marital_status
+  - occupation
+  - relationship
+  - race
+  - sex
+  - capital_gain
+  - capital_loss
+  - hours_per_week
+  - native_country
+  - workclass_occupation
+  - workclass_education
+  - occupation_education
+  - marital_status_relationship
+  - race_sex
+  - capital_margin
+  - capital_total
+  - capital_margin_flag
