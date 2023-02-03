@@ -8,6 +8,7 @@ import xgboost as xgb
 from catboost import CatBoostRegressor, Pool
 from omegaconf import DictConfig
 from pytorch_tabnet.tab_model import TabNetRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
 
 from models.base import BaseModel
@@ -152,6 +153,19 @@ class MlpRegressionTrainer(BaseModel):
     ) -> MLPRegressor:
         """method train"""
         model = MLPRegressor(verbose=True)
+        model.fit(X_train, y_train)
+
+        return model
+
+
+class RandomForestRegressionTrainer(BaseModel):
+    def __init__(self, config: DictConfig):
+        super().__init__(config)
+
+    def _fit(
+        self, X_train: pd.DataFrame, y_train: pd.Series, X_valid: pd.DataFrame | None, y_valid: pd.Series | None
+    ) -> RandomForestRegressor:
+        model = RandomForestRegressor()
         model.fit(X_train, y_train)
 
         return model

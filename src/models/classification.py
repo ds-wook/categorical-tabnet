@@ -11,6 +11,7 @@ from catboost import CatBoostClassifier, Pool
 from omegaconf import DictConfig
 from pytorch_tabnet.multitask import TabNetMultiTaskClassifier
 from pytorch_tabnet.tab_model import TabNetClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 
 from models.base import BaseModel
@@ -193,3 +194,16 @@ class MlpClassificationTrainer(BaseModel):
         model.fit(X_train, y_train)
 
         return
+
+
+class RandomForestClassificationTrainer(BaseModel):
+    def __init__(self, config: DictConfig):
+        super().__init__(config)
+
+    def _fit(
+        self, x_train: pd.DataFrame, y_train: pd.Series, x_valid: pd.DataFrame, y_valid: pd.Series
+    ) -> RandomForestClassifier:
+        model = RandomForestClassifier()
+        model.fit(x_train, y_train)
+
+        return model

@@ -1,0 +1,21 @@
+path: input/rossmann-store-sales/
+name: census
+encoder: res/data/
+num: 5
+seed: 42
+test_size: 0.18
+target: Sales
+train: train.csv
+store: store.csv
+method: catboost
+drop_features:
+  - year
+cat_features:
+  - Store
+  - Promo
+  - Promo2
+  - DayOfWeek
+  - month
+  - day
+  - StoreType
+  - Assortment
