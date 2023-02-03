@@ -18,7 +18,7 @@ from models.classification import (
     XGBoostClassificationTrainer,
 )
 from models.encoder import CatBoostCategoricalEncoder
-from utils.evaluate import evaluate_metrics
+from utils.evaluate import evaluate_classification_metrics
 
 
 @hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
@@ -31,25 +31,25 @@ def _main(cfg: DictConfig):
         xgb_trainer = XGBoostClassificationTrainer(config=cfg)
         xgb_model = xgb_trainer.train(X_train, y_train, X_valid, y_valid)
         xgb_preds = xgb_model.predict(xgb.DMatrix(X_test, enable_categorical=True))
-        evaluate_metrics(y_test.to_numpy(), xgb_preds)
+        evaluate_classification_metrics(y_test.to_numpy(), xgb_preds)
 
     elif cfg.models.working == "lightgbm":
         lgb_trainer = LightGBMClassificationTrainer(config=cfg)
         lgb_model = lgb_trainer.train(X_train, y_train, X_valid, y_valid)
         lgb_preds = lgb_model.predict(X_test)
-        evaluate_metrics(y_test.to_numpy(), lgb_preds)
+        evaluate_classification_metrics(y_test.to_numpy(), lgb_preds)
 
     elif cfg.models.working == "catboost":
         cb_trainer = CatBoostClassificationTrainer(config=cfg)
         cb_model = cb_trainer.train(X_train, y_train, X_valid, y_valid)
         cb_preds = cb_model.predict_proba(X_test) if cfg.models.multi_task else cb_model.predict_proba(X_test)[:, 1]
-        evaluate_metrics(y_test.to_numpy(), cb_preds)
+        evaluate_classification_metrics(y_test.to_numpy(), cb_preds)
 
     elif cfg.models.working == "rf":
         rf_trainer = RandomForestClassificationTrainer(config=cfg)
         rf_model = rf_trainer.train(X_train, y_train, X_valid, y_valid)
         rf_preds = rf_model.predict_proba(X_test) if cfg.models.multi_task else rf_model.predict_proba(X_test)[:, 1]
-        evaluate_metrics(y_test.to_numpy(), rf_preds)
+        evaluate_classification_metrics(y_test.to_numpy(), rf_preds)
 
     elif cfg.models.working == "tabnet":
         tabnet_trainer = TabNetClassificationTrainer(config=cfg)
@@ -60,7 +60,7 @@ def _main(cfg: DictConfig):
             if cfg.models.multi_task
             else tabnet_model.predict_proba(X_test.to_numpy())[:, 1]
         )
-        evaluate_metrics(y_test.to_numpy(), tabnet_preds)
+        evaluate_classification_metrics(y_test.to_numpy(), tabnet_preds)
 
     elif cfg.models.working == "catabnet":
         # catboost encoder
@@ -78,7 +78,7 @@ def _main(cfg: DictConfig):
             if cfg.models.multi_task
             else tabnet_model.predict_proba(X_test.to_numpy())[:, 1]
         )
-        evaluate_metrics(y_test.to_numpy(), tabnet_preds)
+        evaluate_classification_metrics(y_test.to_numpy(), tabnet_preds)
 
     elif cfg.models.working == "mlp":
         scaler = StandardScaler()
@@ -92,7 +92,7 @@ def _main(cfg: DictConfig):
         mlp_trainer = MlpClassificationTrainer(config=cfg)
         mlp_model = mlp_trainer.train(X_train, y_train, X_valid, y_valid)
         mlp_preds = mlp_model.predict_proba(X_test) if cfg.models.multi_task else mlp_model.predict_proba(X_test)[:, 1]
-        evaluate_metrics(y_test.to_numpy(), mlp_preds)
+        evaluate_classification_metrics(y_test.to_numpy(), mlp_preds)
 
     else:
         raise NotImplementedError

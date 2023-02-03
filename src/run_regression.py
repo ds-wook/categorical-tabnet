@@ -17,7 +17,7 @@ from models.regression import (
     TabNetRegressionTrainer,
     XGBoostRegressionTrainer,
 )
-from utils.evaluate import evaluate_metrics
+from utils.evaluate import evaluate_regression_metrics
 
 
 @hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
@@ -32,7 +32,7 @@ def _main(cfg: DictConfig):
         y_test = np.expm1(y_test)
         xgb_preds = np.expm1(xgb_preds)
 
-        evaluate_metrics(y_test.to_numpy(), xgb_preds)
+        evaluate_regression_metrics(y_test.to_numpy(), xgb_preds)
 
     elif cfg.models.working == "lightgbm":
         lgb_trainer = LightGBMRegressionTrainer(config=cfg)
@@ -42,7 +42,7 @@ def _main(cfg: DictConfig):
         y_test = np.expm1(y_test)
         lgb_preds = np.expm1(lgb_preds)
 
-        evaluate_metrics(y_test.to_numpy(), lgb_preds)
+        evaluate_regression_metrics(y_test.to_numpy(), lgb_preds)
 
     elif cfg.models.working == "catboost":
         cb_trainer = CatBoostRegressionTrainer(config=cfg)
@@ -52,7 +52,7 @@ def _main(cfg: DictConfig):
         y_test = np.expm1(y_test)
         cb_preds = np.expm1(cb_preds)
 
-        evaluate_metrics(y_test.to_numpy(), cb_preds)
+        evaluate_regression_metrics(y_test.to_numpy(), cb_preds)
 
     elif cfg.models.working == "rf":
         rf_trainer = RandomForestRegressionTrainer(config=cfg)
@@ -62,7 +62,7 @@ def _main(cfg: DictConfig):
         y_test = np.expm1(y_test)
         rf_preds = np.expm1(rf_preds)
 
-        evaluate_metrics(y_test.to_numpy(), rf_preds)
+        evaluate_regression_metrics(y_test.to_numpy(), rf_preds)
 
     elif cfg.models.working == "tabnet":
         tabnet_trainer = TabNetRegressionTrainer(config=cfg)
@@ -72,7 +72,7 @@ def _main(cfg: DictConfig):
         y_test = np.expm1(y_test)
         tabnet_preds = np.expm1(tabnet_preds)
 
-        evaluate_metrics(y_test.to_numpy(), tabnet_preds)
+        evaluate_regression_metrics(y_test.to_numpy(), tabnet_preds)
 
     elif cfg.models.working == "catabnet":
         # catboost encoder
@@ -88,7 +88,7 @@ def _main(cfg: DictConfig):
         y_test = np.expm1(y_test)
         tabnet_preds = np.expm1(tabnet_preds)
 
-        evaluate_metrics(y_test.to_numpy(), tabnet_preds)
+        evaluate_regression_metrics(y_test.to_numpy(), tabnet_preds)
 
     elif cfg.models.working == "mlp":
         X_train = pd.get_dummies(X_train)
@@ -108,7 +108,7 @@ def _main(cfg: DictConfig):
         mlp_preds = mlp_model.predict(X_test)
         y_test = np.expm1(y_test)
         mlp_preds = np.expm1(mlp_preds)
-        evaluate_metrics(y_test.to_numpy(), mlp_preds)
+        evaluate_regression_metrics(y_test.to_numpy(), mlp_preds)
 
     else:
         raise NotImplementedError
