@@ -100,7 +100,7 @@ class TabNetClassificationTrainer(BaseModel):
         return model
 
 
-class LightGBMCalssificationTrainer(BaseModel):
+class LightGBMClassificationTrainer(BaseModel):
     def __init__(self, config: DictConfig):
         super().__init__(config)
 
@@ -130,7 +130,7 @@ class LightGBMCalssificationTrainer(BaseModel):
         return model
 
 
-class CatBoostCalssificationTrainer(BaseModel):
+class CatBoostClassificationTrainer(BaseModel):
     def __init__(self, config: DictConfig):
         super().__init__(config)
 
@@ -158,7 +158,7 @@ class CatBoostCalssificationTrainer(BaseModel):
         return model
 
 
-class XGBoostCalssificationTrainer(BaseModel):
+class XGBoostClassificationTrainer(BaseModel):
     def __init__(self, config: DictConfig):
         super().__init__(config)
 
