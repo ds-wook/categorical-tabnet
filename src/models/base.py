@@ -19,7 +19,6 @@ from pytorch_tabnet.multitask import TabNetMultiTaskClassifier
 from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm
 
-from utils.evaluate import evaluate_metrics
 
 warnings.filterwarnings("ignore")
 
@@ -178,7 +177,5 @@ class BaseModel(metaclass=ABCMeta):
 
         self.oof_preds = oof_preds
         self.result = ModelResult(oof_preds=oof_preds, models=models)
-
-        evaluate_metrics(train_y.to_numpy(), oof_preds)
 
         return self

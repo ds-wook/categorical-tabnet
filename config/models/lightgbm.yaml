@@ -1,9 +1,10 @@
 n_splits: 10
 params:
-  objective: regression
-  metric: rmse
+  objective: multiclass
+  metric: multi_logloss
   learning_rate: 0.2
   seed: 42
+  num_class: 7
   verbose: -1
 multi_task: True
 path: res/models/

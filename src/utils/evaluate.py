@@ -63,9 +63,14 @@ def evaluate_classification_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> N
     """
 
     loss = log_loss(y_true, y_pred)
-    accuracy = accuracy_score(y_true, np.argmax(y_pred), squared=False)
-    f1 = f1_score(y_true, np.where(y_pred > 0.5, 1, 0))
-    auc = roc_auc_score(y_true, y_pred)
+    accuracy = accuracy_score(y_true, np.argmax(y_pred, axis=1))
+
+    if np.unique(y_true).shape[0] == 2:
+        f1 = f1_score(y_true, np.argmax(y_pred, axis=1), average="binary")
+        auc = roc_auc_score(y_true, y_pred)
+    else:
+        f1 = f1_score(y_true, np.argmax(y_pred, axis=1), average="micro")
+        auc = roc_auc_score(y_true, y_pred, multi_class="ovr")
 
     scores = PrettyTable()
     scores.field_names = ["LogLoss", "Accuracy", "F-score", "ROC-AUC"]
