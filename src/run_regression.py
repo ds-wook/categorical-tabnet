@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hydra
 import numpy as np
-import pandas as pd
 import xgboost as xgb
 from omegaconf import DictConfig
 from sklearn.preprocessing import StandardScaler
@@ -91,10 +90,6 @@ def _main(cfg: DictConfig):
         evaluate_regression_metrics(y_test.to_numpy(), tabnet_preds)
 
     elif cfg.models.working == "mlp":
-        X_train = pd.get_dummies(X_train)
-        X_valid = pd.get_dummies(X_valid)
-        X_test = pd.get_dummies(X_test)
-
         scaler = StandardScaler()
         num_features = [col for col in X_train.columns if col in [*cfg.data.cat_features]]
 
