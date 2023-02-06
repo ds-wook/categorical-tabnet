@@ -1,0 +1,5 @@
+cat_features:
+  - age_group
+  - gender
+  - race
+  - religion

@@ -1,12 +1,12 @@
 task_type: GPU
 params:
-  learning_rate: 0.2
+  learning_rate: 0.02
   l2_leaf_reg: 0.3
   bagging_temperature: 1
   min_data_in_leaf: 57
   max_bin: 494
-  eval_metric: RMSE
-  loss_function: RMSE
+  eval_metric: AUC
+  loss_function: Logloss
   od_type: Iter
   od_wait: 500
   iterations: 10000

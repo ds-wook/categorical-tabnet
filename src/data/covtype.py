@@ -15,7 +15,7 @@ def load_covtype_dataset(config: DictConfig) -> tuple[pd.DataFrame, pd.Series]:
     train_y = data[config.data.target] - 1
 
     X_train, X_test, y_train, y_test = train_test_split(
-        train_x, train_y, test_size=config.data.test_size, random_state=config.data.seed, stratify=train_y
+        train_x, train_y, test_size=0.15, random_state=config.data.seed, stratify=train_y
     )
     X_train, X_valid, y_train, y_valid = train_test_split(
         X_train, y_train, test_size=config.data.test_size, random_state=config.data.seed, stratify=y_train

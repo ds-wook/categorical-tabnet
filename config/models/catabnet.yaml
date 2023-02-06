@@ -4,11 +4,11 @@ working: catabnet
 results: 10fold-catabnet-results.pkl
 multi_task: True
 params:
-  lr: 0.02
+  lr: 0.01
   step_size: 50
   gamma: 1.2
   n_d: 64
-  n_steps: 1
+  n_steps: 3
   n_a: 64
   lambda_sparse: 0.001
   max_epochs: 1000

@@ -47,7 +47,7 @@ class BaseEncoder(metaclass=ABCMeta):
         Returns:
             dataframe
         """
-        for cat_feature in tqdm(self.config.features.cat_features):
+        for cat_feature in tqdm(self.config.data.cat_features):
             # convert to string
             train_x[cat_feature] = train_x[cat_feature].astype(str)
 
