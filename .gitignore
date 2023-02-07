@@ -135,3 +135,4 @@ res/data/*
 !res/data/.gitkeep
 res/models/*
 !res/models/.gitkeep
+.vscode/*
