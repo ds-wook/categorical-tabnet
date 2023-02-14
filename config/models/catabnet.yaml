@@ -4,17 +4,23 @@ working: catabnet
 results: 10fold-catabnet-results.pkl
 multi_task: True
 params:
-  lr: 0.01
+  lr: 0.02
   step_size: 50
   gamma: 1.2
-  n_d: 64
+  n_d: 32
   n_steps: 3
-  n_a: 64
+  n_a: 32
   lambda_sparse: 0.001
   max_epochs: 1000
   patience: 10
-  batch_size: 512
-  virtual_batch_size: 64
+  batch_size: 64
+  virtual_batch_size: 32
   num_workers: 1
   mask_type: entmax
   verbose: 10
+eval_name:
+  - train
+  - valid
+eval_metric:
+  - auc
+  - logloss
