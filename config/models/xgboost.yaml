@@ -3,8 +3,8 @@ params:
   eta: 0.2
   seed: 42
   tree_method: gpu_hist
-  objective: reg:squarederror
-  eval_metric: rmse
+  objective: binary:logistic
+  eval_metric: auc
 multi_task: False
 path: res/models/
 working: xgboost

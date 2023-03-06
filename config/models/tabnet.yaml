@@ -18,3 +18,9 @@ params:
   num_workers: 1
   mask_type: entmax
   verbose: 10
+eval_name:
+  - train
+  - valid
+eval_metric:
+  - auc
+  - logloss
