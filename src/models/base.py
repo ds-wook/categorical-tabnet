@@ -19,7 +19,6 @@ from pytorch_tabnet.multitask import TabNetMultiTaskClassifier
 from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm
 
-
 warnings.filterwarnings("ignore")
 
 
@@ -89,7 +88,7 @@ class BaseModel(metaclass=ABCMeta):
     ) -> NoReturn:
         raise NotImplementedError
 
-    def save_model(self, model_path: Path | str, model_name: str) -> BaseModel:
+    def save_model(self, model_path: Path | str, model_name: str):
         """
         Save model
         Args:
@@ -101,8 +100,6 @@ class BaseModel(metaclass=ABCMeta):
 
         with open(model_path / model_name, "wb") as output:
             pickle.dump(self.result, output, pickle.HIGHEST_PROTOCOL)
-
-        return
 
     def train(
         self,
