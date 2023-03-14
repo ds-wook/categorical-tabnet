@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from data.census import load_census_dataset
 from data.covtype import load_covtype_dataset
 from data.psychometrics import load_psychometrics_dataset
+from data.shrutime import load_shrutime_dataset
 from models.classification import (
     CatBoostClassificationTrainer,
     LightGBMClassificationTrainer,
@@ -29,9 +30,10 @@ def _main(cfg: DictConfig):
         if cfg.data.name == "census"
         else load_covtype_dataset(cfg)
         if cfg.data.name == "covtype"
+        else load_shrutime_dataset(cfg)
+        if cfg.data.name == "shrutime"
         else load_psychometrics_dataset(cfg)
     )
-
     if cfg.models.working == "xgboost":
         xgb_trainer = XGBoostClassificationTrainer(config=cfg)
         xgb_model = xgb_trainer.train(X_train, y_train, X_valid, y_valid)

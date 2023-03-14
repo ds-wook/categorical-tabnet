@@ -80,7 +80,6 @@ class TabNetClassificationTrainer(BaseModel):
                 cat_dims=self.cat_dims,
                 verbose=self.config.models.params.verbose,
             )
-
             model.fit(
                 X_train=X_train.to_numpy(),
                 y_train=y_train.to_numpy(),
