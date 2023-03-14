@@ -9,7 +9,7 @@ params:
   gamma: 1.2
   n_d: 32
   n_steps: 3
-  n_a: 62
+  n_a: 64
   lambda_sparse: 0.001
   max_epochs: 1000
   patience: 10
