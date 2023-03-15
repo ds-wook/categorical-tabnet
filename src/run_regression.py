@@ -6,7 +6,7 @@ import xgboost as xgb
 from omegaconf import DictConfig
 from sklearn.preprocessing import StandardScaler
 
-from data.rossmann import load_rossmann_dataset
+from data.rossmann import load_dataset
 from models.encoder import CatBoostCategoricalEncoder
 from models.regression import (
     CatBoostRegressionTrainer,
@@ -21,7 +21,7 @@ from utils.evaluate import evaluate_regression_metrics
 
 @hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
 def _main(cfg: DictConfig):
-    X_train, X_valid, X_test, y_train, y_valid, y_test = load_rossmann_dataset(cfg)
+    X_train, X_valid, X_test, y_train, y_valid, y_test = load_dataset(cfg)
 
     if cfg.models.working == "xgboost":
         xgb_trainer = XGBoostRegressionTrainer(config=cfg)

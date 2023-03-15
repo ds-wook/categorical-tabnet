@@ -7,10 +7,7 @@ import xgboost as xgb
 from omegaconf import DictConfig
 from sklearn.preprocessing import StandardScaler
 
-from data.census import load_census_dataset
-from data.covtype import load_covtype_dataset
-from data.psychometrics import load_psychometrics_dataset
-from data.shrutime import load_shrutime_dataset
+from data.dataset import load_dataset
 from models.classification import (
     CatBoostClassificationTrainer,
     LightGBMClassificationTrainer,
@@ -25,15 +22,8 @@ from utils.evaluate import evaluate_classification_metrics
 
 @hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
 def _main(cfg: DictConfig):
-    X_train, X_valid, X_test, y_train, y_valid, y_test = (
-        load_census_dataset(cfg)
-        if cfg.data.name == "census"
-        else load_covtype_dataset(cfg)
-        if cfg.data.name == "covtype"
-        else load_shrutime_dataset(cfg)
-        if cfg.data.name == "shrutime"
-        else load_psychometrics_dataset(cfg)
-    )
+    X_train, X_valid, X_test, y_train, y_valid, y_test = load_dataset(cfg)
+
     if cfg.models.working == "xgboost":
         xgb_trainer = XGBoostClassificationTrainer(config=cfg)
         xgb_model = xgb_trainer.train(X_train, y_train, X_valid, y_valid)

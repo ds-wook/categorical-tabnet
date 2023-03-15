@@ -1,20 +1,20 @@
 n_splits: 10
 path: res/models/
 working: tabnet
-results: 10fold-tabnet-results.pkl
+results: 10fold-catabnet-results.pkl
 multi_task: True
 params:
-  lr: 0.002
+  lr: 0.02
   step_size: 50
   gamma: 1.2
-  n_d: 32
+  n_d: 64
   n_steps: 5
-  n_a: 32
+  n_a: 64
   lambda_sparse: 0.001
   max_epochs: 1000
   patience: 10
-  batch_size: 4096
-  virtual_batch_size: 512
+  batch_size: 64
+  virtual_batch_size: 64
   num_workers: 1
   mask_type: entmax
   verbose: 10

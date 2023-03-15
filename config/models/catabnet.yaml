@@ -7,14 +7,14 @@ params:
   lr: 0.02
   step_size: 50
   gamma: 1.2
-  n_d: 32
-  n_steps: 3
+  n_d: 64
+  n_steps: 5
   n_a: 64
   lambda_sparse: 0.001
   max_epochs: 1000
   patience: 10
   batch_size: 64
-  virtual_batch_size: 32
+  virtual_batch_size: 64
   num_workers: 1
   mask_type: entmax
   verbose: 10
