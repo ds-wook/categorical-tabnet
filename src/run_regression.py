@@ -6,7 +6,7 @@ import xgboost as xgb
 from omegaconf import DictConfig
 from sklearn.preprocessing import StandardScaler
 
-from data.rossmann import load_dataset
+from data.dataset import load_dataset
 from models.encoder import CatBoostCategoricalEncoder
 from models.regression import (
     CatBoostRegressionTrainer,

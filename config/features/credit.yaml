@@ -1,0 +1,6 @@
+cat_features:
+  - Income_Category
+  - Card_Category
+  - Education_Level
+  - Gender
+  - Marital_Status

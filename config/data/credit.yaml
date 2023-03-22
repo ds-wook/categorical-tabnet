@@ -1,0 +1,19 @@
+path: input/credit-card-customers/
+name: credit
+encoder: res/data/
+num: 5
+seed: 42
+test_size: 0.2
+target: Attrition_Flag
+train: BankChurners.csv
+method: catboost
+drop_features:
+  - Naive_Bayes_Classifier_Attrition_Flag_Card_Category_Contacts_Count_12_mon_Dependent_count_Education_Level_Months_Inactive_12_mon_1
+  - Naive_Bayes_Classifier_Attrition_Flag_Card_Category_Contacts_Count_12_mon_Dependent_count_Education_Level_Months_Inactive_12_mon_2
+  - CLIENTNUM
+cat_features:
+  - Income_Category
+  - Card_Category
+  - Education_Level
+  - Gender
+  - Marital_Status
