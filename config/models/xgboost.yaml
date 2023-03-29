@@ -1,3 +1,4 @@
+task_type: binary
 n_splits: 10
 params:
   eta: 0.2

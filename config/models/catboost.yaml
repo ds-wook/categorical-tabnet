@@ -1,5 +1,6 @@
-task_type: GPU
+task_type: binary
 params:
+  task_type: GPU
   learning_rate: 0.02
   l2_leaf_reg: 0.3
   bagging_temperature: 1

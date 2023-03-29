@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 import xgboost as xgb
+from omegaconf import DictConfig
 from prettytable import PrettyTable
 from sklearn.metrics import (
     accuracy_score,
@@ -38,46 +39,43 @@ def rmspe_xgb(yhat: xgb.DMatrix, y: xgb.DMatrix) -> tuple[str, float]:
     return "rmspe", rmspe
 
 
-def evaluate_regression_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> None:
+def evaluate_metrics(cfg: DictConfig, y_true: np.ndarray, y_pred: np.ndarray) -> None:
     """
     Evaluate metrics
     """
-
-    mae = mean_absolute_error(y_true, y_pred)
-    rmse = mean_squared_error(y_true, y_pred, squared=False)
-    rmspe = root_mean_squared_percentage_error(y_true, y_pred)
-    r2 = r2_score(y_true, y_pred)
-
     scores = PrettyTable()
-    scores.field_names = ["MAE", "RMSE", "RMSPE", "R2"]
-    scores.add_row(
-        [f"{mae:.4f}", f"{rmse:.4f}", f"{rmspe:.4f}", f"{r2:.4f}"],
-    )
 
-    logging.info(f"\n{scores.get_string()}")
-
-
-def evaluate_classification_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> None:
-    """
-    Evaluate metrics
-    """
-
-    loss = log_loss(y_true, y_pred)
-
-    if np.unique(y_true).shape[0] == 2:
+    if cfg.models.task_type == "binary":
+        loss = log_loss(y_true, y_pred)
         accuracy = accuracy_score(y_true, y_pred > 0.5)
         f1 = f1_score(y_true, y_pred > 0.5, average="macro")
         auc = roc_auc_score(y_true, y_pred)
+        scores.field_names = ["LogLoss", "Accuracy", "F-score", "ROC-AUC"]
+        scores.add_row(
+            [f"{loss:.4f}", f"{accuracy:.4f}", f"{f1:.4f}", f"{auc:.4f}"],
+        )
 
-    else:
+    elif cfg.models.task_type == "multiclass":
         accuracy = accuracy_score(y_true, np.argmax(y_pred, axis=1))
         f1 = f1_score(y_true, np.argmax(y_pred, axis=1), average="micro")
         auc = roc_auc_score(y_true, y_pred, multi_class="ovr")
+        scores.field_names = ["LogLoss", "Accuracy", "F-score", "ROC-AUC"]
+        scores.add_row(
+            [f"{loss:.4f}", f"{accuracy:.4f}", f"{f1:.4f}", f"{auc:.4f}"],
+        )
 
-    scores = PrettyTable()
-    scores.field_names = ["LogLoss", "Accuracy", "F-score", "ROC-AUC"]
-    scores.add_row(
-        [f"{loss:.4f}", f"{accuracy:.4f}", f"{f1:.4f}", f"{auc:.4f}"],
-    )
+    elif cfg.models.task_type == "regression":
+        mae = mean_absolute_error(y_true, y_pred)
+        rmse = mean_squared_error(y_true, y_pred, squared=False)
+        rmspe = root_mean_squared_percentage_error(y_true, y_pred)
+        r2 = r2_score(y_true, y_pred)
+
+        scores.field_names = ["MAE", "RMSE", "RMSPE", "R2"]
+        scores.add_row(
+            [f"{mae:.4f}", f"{rmse:.4f}", f"{rmspe:.4f}", f"{r2:.4f}"],
+        )
+
+    else:
+        raise NotImplementedError
 
     logging.info(f"\n{scores.get_string()}")

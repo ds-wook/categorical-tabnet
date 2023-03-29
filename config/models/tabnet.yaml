@@ -1,8 +1,8 @@
+task_type: binary
 n_splits: 10
 path: res/models/
 working: tabnet
 results: tabnet-results
-multi_task: True
 params:
   lr: 0.02
   step_size: 50
