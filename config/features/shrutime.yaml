@@ -1,6 +1,5 @@
 cat_features:
   - Tenure
-  - NumOfProducts
   - HasCrCard
   - IsActiveMember
   - Geography

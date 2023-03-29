@@ -3,12 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 
 import hydra
+import pandas as pd
 import xgboost as xgb
 from omegaconf import DictConfig
 
 from data.dataset import load_dataset
 from models.boosting import CatBoostTrainer, LightGBMTrainer, RandomForestTrainer, XGBoostTrainer
-from models.encoder import CatBoostCategoricalEncoder
+from models.encoder import CatBoostCategoricalEncoder, categorize_tabnet_features
 from models.transformer import TabNetTrainer
 from utils.evaluate import evaluate_metrics
 
@@ -16,6 +17,7 @@ from utils.evaluate import evaluate_metrics
 @hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
 def _main(cfg: DictConfig):
     X_train, X_valid, X_test, y_train, y_valid, y_test = load_dataset(cfg)
+    cat_idxs, cat_dims = categorize_tabnet_features(cfg, pd.concat([X_train, X_valid, X_test]))
 
     if cfg.models.working == "xgboost":
         xgb_trainer = XGBoostTrainer(config=cfg)
@@ -46,7 +48,8 @@ def _main(cfg: DictConfig):
         )
 
     elif cfg.models.working == "tabnet":
-        tabnet_trainer = TabNetTrainer(config=cfg)
+        tabnet_trainer = TabNetTrainer(config=cfg, cat_dims=cat_dims, cat_idxs=cat_idxs)
+
         tabnet_model = tabnet_trainer.train(X_train, y_train, X_valid, y_valid)
         tabnet_model.save_model(Path(cfg.models.path) / cfg.models.working / cfg.models.results)
         y_preds = (

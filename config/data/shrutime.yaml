@@ -10,7 +10,6 @@ test: test.csv
 method: catboost
 cat_features:
   - Tenure
-  - NumOfProducts
   - HasCrCard
   - IsActiveMember
   - Geography
