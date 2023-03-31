@@ -77,7 +77,9 @@ class CatBoostTrainer(BaseModel):
             eval_set=valid_set,
             verbose_eval=self.config.models.verbose_eval,
             early_stopping_rounds=self.config.models.early_stopping_rounds,
-            callbacks=[wandb_cb.WandbCallback()] if self.config.log.experiment else None,
+            callbacks=[wandb_cb.WandbCallback()]
+            if self.config.models.params.task_type == "CPU" and self.config.log.experiment
+            else None,
         )
 
         return model

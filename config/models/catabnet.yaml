@@ -7,12 +7,12 @@ params:
   lr: 0.02
   step_size: 50
   gamma: 1.2
-  n_d: 32
+  n_d: 96
   n_steps: 3
   n_a: 64
   lambda_sparse: 0.001
   max_epochs: 1000
-  patience: 10
+  patience: 20
   batch_size: 64
   virtual_batch_size: 32
   num_workers: 1
