@@ -50,8 +50,8 @@ class CatBoostTrainer(BaseModel):
     def _fit(
         self, X_train: pd.DataFrame, y_train: pd.Series, X_valid: pd.DataFrame | None, y_valid: pd.Series | None
     ) -> CatBoostClassifier | CatBoostRegressor:
-        train_set = Pool(X_train, y_train)
-        valid_set = Pool(X_valid, y_valid)
+        train_set = Pool(X_train, y_train, cat_features=self.config.data.cat_features)
+        valid_set = Pool(X_valid, y_valid, cat_features=self.config.data.cat_features)
 
         if self.config.models.task_type == "binary":
             model = CatBoostClassifier(

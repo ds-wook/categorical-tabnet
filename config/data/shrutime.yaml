@@ -8,9 +8,11 @@ target: Exited
 train: train.csv
 test: test.csv
 method: catboost
+q: 5
 cat_features:
   - Tenure
   - HasCrCard
   - IsActiveMember
   - Geography
   - Gender
+  - EstimatedSalary

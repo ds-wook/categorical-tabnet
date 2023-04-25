@@ -4,5 +4,6 @@ path: res/models/
 working: rf
 results: 10fold-randomforest-results.pkl
 multi_task: True
+seed: 42
 params:
   n_estimators: 100

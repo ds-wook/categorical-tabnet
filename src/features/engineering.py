@@ -76,3 +76,19 @@ def catboost_encoder_multiclass(
             test_x[f"{cat_feature}_{class_}"] = enc.transform(test_x[cat_feature])
 
     return train_x, test_x
+
+
+def change_numeric2category(df: pd.DataFrame, col: str, q: int) -> pd.DataFrame:
+    """
+    Change numeric features to category features
+    Args:
+        config: config
+        df: dataframe
+        q: quantile
+    Returns:
+        dataframe
+    """
+
+    df[col] = pd.qcut(df[col], q=q, duplicates="drop", labels=False)
+
+    return df

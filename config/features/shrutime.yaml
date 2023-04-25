@@ -4,3 +4,4 @@ cat_features:
   - IsActiveMember
   - Geography
   - Gender
+  - EstimatedSalary
