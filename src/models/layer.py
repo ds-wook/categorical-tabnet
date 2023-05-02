@@ -13,10 +13,10 @@ class MlpClassificationTrainer(nn.Module):
         self.layer_3 = nn.Linear(256, 128)
         self.layer_out = nn.Linear(128, num_class)
 
-        nn.init.xavier_normal_(self.layer_1.weight)
-        nn.init.xavier_normal_(self.layer_2.weight)
-        nn.init.xavier_normal_(self.layer_3.weight)
-        nn.init.xavier_normal_(self.layer_out.weight)
+        torch.nn.init.xavier_normal_(self.layer_1.weight)
+        torch.nn.init.xavier_normal_(self.layer_2.weight)
+        torch.nn.init.xavier_normal_(self.layer_3.weight)
+        torch.nn.init.xavier_normal_(self.layer_out.weight)
 
         self.dropout_1 = nn.Dropout(p=0.3)
         self.dropout_2 = nn.Dropout(p=0.2)
