@@ -16,7 +16,6 @@ class EarlyStoppingCallback:
 
         elif self.epoch_score > self.best_epoch_score - self.min_delta:
             self.attempt += 1
-            print(f"Message from callback (Early Stopping) counter: {self.attempt}/{self.patience}")
 
             if self.attempt >= self.patience:
                 self.stop_training = True
