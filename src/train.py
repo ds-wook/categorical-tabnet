@@ -91,7 +91,7 @@ def _main(cfg: DictConfig):
         # eval
         accuracy_stat = {"train": [], "validation": []}
         loss_stat = {"train": [], "validation": []}
-        early_stopping_callback = EarlyStoppingCallback(0.001, 5)
+        early_stopping_callback = EarlyStoppingCallback(0.001, cfg.models.patience)
 
         # load dataset
         train_dataset = TabularDataset(
@@ -166,9 +166,6 @@ def _main(cfg: DictConfig):
                 early_stopping_callback(val_epoch_loss / len(valid_loader))
 
                 if early_stopping_callback.stop_training:
-                    print(
-                        f"Training stopped -> Early Stopping Callback : validation_loss: {val_epoch_loss/len(valid_loader)}"
-                    )
                     break
 
                 loss_stat["train"].append(train_epoch_loss / len(train_loader))
