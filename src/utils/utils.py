@@ -1,10 +1,12 @@
 import itertools
 import os
 import random
+from typing import NoReturn
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import torch
 from tqdm import tqdm
 
 
@@ -31,10 +33,15 @@ def plot_confusion_matrix(cm, classes, normalize, title, cmap):
     plt.xlabel("Predicted label")
 
 
-def seed_everything(seed: int = 42) -> None:
-    random.seed(seed)
+def seed_everything(seed: int = 42) -> NoReturn:
     os.environ["PYTHONASHSEED"] = str(seed)
+    random.seed(seed)
     np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
 def reduce_mem_usage(df: pd.DataFrame, verbose: bool = True) -> pd.DataFrame:

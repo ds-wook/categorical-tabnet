@@ -4,3 +4,7 @@ path: res/models/
 working: mlp
 results: 10fold-mlp-results.pkl
 multi_task: True
+num_epochs: 100
+batch_size: 64
+lr: 0.01
+seed: 42

@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 import pandas as pd
+import torch
 import xgboost as xgb
 from omegaconf import DictConfig
 from prettytable import PrettyTable
@@ -79,3 +80,15 @@ def evaluate_metrics(cfg: DictConfig, y_true: np.ndarray, y_pred: np.ndarray) ->
         raise NotImplementedError
 
     logging.info(f"\n{scores.get_string()}")
+
+
+def acc_calc(y_pred: torch.tensor, y_test: torch.tensor) -> float:
+    y_pred_softmax = torch.log_softmax(y_pred, dim=1)
+    _, y_pred_tags = torch.max(y_pred_softmax, dim=1)
+
+    correct_pred = (y_pred_tags == y_test).float()
+    acc = correct_pred.sum() / len(correct_pred)
+
+    acc = torch.round(acc * 100)
+
+    return acc

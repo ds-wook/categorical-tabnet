@@ -37,6 +37,10 @@ class MlpClassificationTrainer(nn.Module):
         x = self.softmax(x)
         x = self.dropout_2(x)
 
+        x = self.layer_3(x)
+        x = self.relu(x)
+        x = self.batch_norm_3(x)
+
         x = self.layer_out(x)
 
         return x
