@@ -1,13 +1,14 @@
 task_type: binary
 n_splits: 10
 params:
-  objective: binary
-  metric: auc
+  objective: multiclass
+  metric: multi_logloss
   learning_rate: 0.02
   num_leaves: 16
   max_depth: -1
   seed: 42
   verbose: -1
+  num_class: 7
 multi_task: True
 path: res/models/
 working: lightgbm

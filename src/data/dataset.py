@@ -12,6 +12,18 @@ from data.shrutime import load_shrutime_dataset
 from data.telco import load_telco_dataset
 
 
+class TabularDataset(Dataset):
+    def __init__(self, X_data: np.ndarray, y_data: np.ndarray):
+        self.X_data = X_data
+        self.y_data = y_data
+
+    def __getitem__(self, index):
+        return self.X_data[index], self.y_data[index]
+
+    def __len__(self):
+        return len(self.X_data)
+
+
 def load_dataset(cfg: DictConfig) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, pd.Series]:
     """
     Load train dataset
@@ -41,15 +53,3 @@ def load_dataset(cfg: DictConfig) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFr
         raise ValueError(f"Dataset {cfg.data.name} not supported")
 
     return X_train, X_valid, X_test, y_train, y_valid, y_test
-
-
-class TabularDataset(Dataset):
-    def __init__(self, X_data: np.ndarray, y_data: np.ndarray):
-        self.X_data = X_data
-        self.y_data = y_data
-
-    def __getitem__(self, index):
-        return self.X_data[index], self.y_data[index]
-
-    def __len__(self):
-        return len(self.X_data)

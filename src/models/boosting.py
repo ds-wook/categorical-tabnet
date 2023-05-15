@@ -56,12 +56,15 @@ class CatBoostTrainer(BaseModel):
         if self.config.models.task_type == "binary":
             model = CatBoostClassifier(
                 random_state=self.config.models.seed,
+                loss_function="Logloss",
+                eval_metric="AUC",
                 **self.config.models.params,
             )
         elif self.config.models.task_type == "multiclass":
             model = CatBoostClassifier(
                 random_state=self.config.models.seed,
                 loss_function="MultiClass",
+                eval_metric="MultiClass",
                 **self.config.models.params,
             )
         elif self.config.models.task_type == "regression":

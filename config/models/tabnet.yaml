@@ -23,5 +23,4 @@ eval_name:
   - train
   - valid
 eval_metric:
-  - auc
   - logloss

@@ -57,6 +57,7 @@ def evaluate_metrics(cfg: DictConfig, y_true: np.ndarray, y_pred: np.ndarray) ->
         )
 
     elif cfg.models.task_type == "multiclass":
+        loss = log_loss(y_true, y_pred)
         accuracy = accuracy_score(y_true, np.argmax(y_pred, axis=1))
         f1 = f1_score(y_true, np.argmax(y_pred, axis=1), average="micro")
         auc = roc_auc_score(y_true, y_pred, multi_class="ovr")
