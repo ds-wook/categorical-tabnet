@@ -6,6 +6,7 @@ from omegaconf import DictConfig
 from pytorch_tabnet.augmentations import ClassificationSMOTE
 from pytorch_tabnet.multitask import TabNetMultiTaskClassifier
 from pytorch_tabnet.tab_model import TabNetClassifier, TabNetRegressor
+from tabpfn import TabPFNClassifier
 
 from models.base import BaseModel
 
@@ -119,5 +120,22 @@ class TabNetTrainer(BaseModel):
             num_workers=self.config.models.params.num_workers,
             drop_last=False,
         )
+
+        return model
+
+
+class TabPFNTrainer(BaseModel):
+    def __init__(self, config: DictConfig):
+        super().__init__(config)
+
+    def _fit(
+        self, X_train: pd.DataFrame, y_train: pd.Series, X_valid: pd.DataFrame | None, y_valid: pd.Series | None
+    ) -> TabPFNClassifier:
+        """method train"""
+        model = TabPFNClassifier(
+            N_ensemble_configurations=self.config.models.params.N_ensemble_configurations,
+            device="cuda:0" if torch.cuda.is_available() else "cpu",
+        )
+        model.fit(X_train.to_numpy(), y_train.to_numpy(), overwrite_warning=True)
 
         return model

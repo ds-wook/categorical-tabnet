@@ -4,10 +4,13 @@ from pathlib import Path
 
 import hydra
 import pandas as pd
+import rtdl
 import torch
+import torch.functional as F
 import torch.nn as nn
 import torch.optim as optim
 import xgboost as xgb
+import zero
 from omegaconf import DictConfig
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
@@ -87,7 +90,11 @@ def _main(cfg: DictConfig):
     elif cfg.models.working == "mlp":
         # Fixed seed
         seed_everything(cfg.models.seed)
-
+        # catboost encoder
+        cb_encoder = CatBoostCategoricalEncoder(config=cfg)
+        X_train = cb_encoder.fit(X_train, y_train)
+        X_valid = cb_encoder.transform(X_valid)
+        X_test = cb_encoder.transform(X_test)
         # eval
         accuracy_stat = {"train": [], "validation": []}
         loss_stat = {"train": [], "validation": []}
@@ -153,6 +160,103 @@ def _main(cfg: DictConfig):
                 model.eval()
                 for X_val_batch, y_val_batch in valid_loader:
                     X_val_batch, y_val_batch = X_val_batch.to(device), y_val_batch.to(device)
+
+                    y_val_pred = model(X_val_batch)
+
+                    val_loss = criterion(y_val_pred, y_val_batch)
+                    val_acc = acc_calc(y_val_pred, y_val_batch)
+
+                    val_epoch_loss += val_loss.item()
+                    val_epoch_acc += val_acc.item()
+
+                # end of validation loop
+                early_stopping_callback(val_epoch_loss / len(valid_loader))
+
+                if early_stopping_callback.stop_training:
+                    break
+
+                loss_stat["train"].append(train_epoch_loss / len(train_loader))
+                loss_stat["validation"].append(val_epoch_loss / len(valid_loader))
+                accuracy_stat["train"].append(train_epoch_acc / len(train_loader))
+                accuracy_stat["validation"].append(val_epoch_acc / len(valid_loader))
+
+                # 2021.05.17
+                # This is a part of NN optimization
+                scheduler.step(val_epoch_acc / len(valid_loader))
+
+        y_preds = model(torch.from_numpy(X_test.to_numpy()).float().to(device))
+        y_preds = torch.nn.functional.softmax(y_preds, dim=1).cpu().detach().numpy()[:, 1]
+
+    elif cfg.models.working == "ft_transformer":
+        # Fixed seed
+        zero.improve_reproducibility(seed=123456)
+        # # catboost encoder
+        # cb_encoder = CatBoostCategoricalEncoder(config=cfg)
+        # X_train = cb_encoder.fit(X_train, y_train)
+        # X_valid = cb_encoder.transform(X_valid)
+        # X_test = cb_encoder.transform(X_test)
+
+        # model
+        num_features = [col for col in X_train.columns if col not in cfg.data.cat_features]
+        X_num_train, X_num_valid, X_num_test = X_train[num_features], X_valid[num_features], X_test[num_features]
+        X_cat_train, X_cat_valid, X_cat_test = (
+            X_train[cfg.data.cat_features],
+            X_valid[cfg.data.cat_features],
+            X_test[cfg.data.cat_features],
+        )
+
+        cardinalities = [X_train[col].nunique() for col in cfg.data.cat_features]
+        num_features = X_num_train.shape[1]
+        num_classes = len(y_train.unique())
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        model = model = rtdl.FTTransformer.make_default(
+            n_num_features=X_num_train.shape[1],
+            cat_cardinalities=cardinalities,
+            last_layer_query_idx=[-1],
+            d_out=1,
+        )
+        model.to(device)
+        optimizer = model.make_default_optimizer()
+
+        loss_fn = (
+            F.binary_cross_entropy_with_logits
+            if cfg.models.task_type == "binclass"
+            else F.cross_entropy
+            if cfg.models.task_type == "multiclass"
+            else F.mse_loss
+        )
+
+        for progress in tqdm(range(1, cfg.models.num_epochs + 1), leave=False):
+            train_epoch_loss = 0
+            train_epoch_acc = 0
+            batch_size = 64
+            train_loader = zero.data.IndexLoader(len(X_train), batch_size, device=device)
+
+            # We loop over training dataset using batches (we use DataLoader to load data with batches)
+            for iteration, batch_idx in enumerate(train_loader):
+                model.train()
+                optimizer.zero_grad()
+                x_num_batch = X_num_train[batch_idx]
+                x_cat_batch = X_cat_train[batch_idx].to(torch.int64)
+                y_batch = y_train[batch_idx]
+                loss = loss_fn(model(x_num_batch, x_cat_batch).squeeze(1), y_batch)
+                loss.backward()
+                optimizer.step()
+
+                train_epoch_loss += train_loss.item()
+                train_epoch_acc += train_acc.item()
+
+            #  Then we validate our model - concept is the same
+            with torch.no_grad():
+                val_epoch_loss = 0
+                val_epoch_acc = 0
+
+                model.eval()
+                prediction = []
+                for batch in zero.iter_batches(torch.cat((X_num_valid, X_cat_valid), 1), 1024):
+                    prediction.append(model(batch))
+                    prediction = torch.cat(prediction).squeeze(1).cpu().numpy()
 
                     y_val_pred = model(X_val_batch)
 

@@ -1,29 +1,17 @@
 # %%
 import pandas as pd
-from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
 
 # %%
 df = pd.read_csv("../input/shrutime/train.csv")
 df.head()
 # %%
-df["Age_cat"] = pd.qcut(df["Age"], q=4, labels=False)
-df.head()
-# %%
-df.columns
-# %%
-df.info()
-# %%
-num_features = [
-    col
-    for col in df.columns
-    if col not in ["Tenure", "HasCrCard", "IsActiveMember", "IsActiveMember", "Geography", "Gender"]
-]
+X = {}
+y = {}
+X["train"], X["test"], y["train"], y["test"] = train_test_split(
+    df.drop(["Exited"], axis=1), df["Exited"], train_size=0.8
+)
 
-num_features
 # %%
-import numpy as np
-
-a = np.random.rand()
-# %%
-a
+X["train"]
 # %%
