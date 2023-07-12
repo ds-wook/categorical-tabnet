@@ -16,3 +16,8 @@ cat_features:
   - Geography
   - Gender
   - EstimatedSalary
+num_features:
+  - CreditScore
+  - Age
+  - Balance
+  - NumOfProducts

@@ -3,10 +3,8 @@ from __future__ import annotations
 import pandas as pd
 import torch
 from omegaconf import DictConfig
-from pytorch_tabnet.augmentations import ClassificationSMOTE
 from pytorch_tabnet.multitask import TabNetMultiTaskClassifier
 from pytorch_tabnet.tab_model import TabNetClassifier, TabNetRegressor
-from tabpfn import TabPFNClassifier
 
 from models.base import BaseModel
 
@@ -21,8 +19,6 @@ class TabNetTrainer(BaseModel):
         self, X_train: pd.DataFrame, y_train: pd.Series, X_valid: pd.DataFrame | None, y_valid: pd.Series | None
     ) -> TabNetClassifier | TabNetRegressor | TabNetMultiTaskClassifier:
         """method train"""
-        aug = ClassificationSMOTE(p=0.2)
-
         if self.config.models.task_type == "binary":
             model = TabNetClassifier(
                 optimizer_fn=torch.optim.Adam,
@@ -56,7 +52,6 @@ class TabNetTrainer(BaseModel):
                 batch_size=self.config.models.params.batch_size,
                 virtual_batch_size=self.config.models.params.virtual_batch_size,
                 num_workers=self.config.models.params.num_workers,
-                augmentations=aug,
                 drop_last=False,
             )
 
@@ -120,22 +115,5 @@ class TabNetTrainer(BaseModel):
             num_workers=self.config.models.params.num_workers,
             drop_last=False,
         )
-
-        return model
-
-
-class TabPFNTrainer(BaseModel):
-    def __init__(self, config: DictConfig):
-        super().__init__(config)
-
-    def _fit(
-        self, X_train: pd.DataFrame, y_train: pd.Series, X_valid: pd.DataFrame | None, y_valid: pd.Series | None
-    ) -> TabPFNClassifier:
-        """method train"""
-        model = TabPFNClassifier(
-            N_ensemble_configurations=self.config.models.params.N_ensemble_configurations,
-            device="cuda:0" if torch.cuda.is_available() else "cpu",
-        )
-        model.fit(X_train.to_numpy(), y_train.to_numpy(), overwrite_warning=True)
 
         return model

@@ -1,0 +1,18 @@
+task_type: binary
+n_splits: 10
+path: res/models/
+working: tabtransformer
+results: tabtransformer-results
+params:
+  backbone: tabtransformer
+  lr: 0.02
+  batch_size: 16
+  optimizer: adamax
+  out_ff_activation: LeakyReLU
+  num_attn_blocks: 14
+  attn_dropout: 0.2
+  ff_dropout: 0.2
+  accumulate_grad_batches: 10
+  gradient_clip_val: 1
+  max_epochs: 5
+output: probabilities
