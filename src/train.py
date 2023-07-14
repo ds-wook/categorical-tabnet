@@ -28,7 +28,7 @@ from utils.evaluate import acc_calc, evaluate_metrics
 from utils.utils import seed_everything
 
 
-@hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
+@hydra.main(config_path="../config/", config_name="train")
 def _main(cfg: DictConfig):
     X_train, X_valid, X_test, y_train, y_valid, y_test = load_dataset(cfg)
     cat_idxs, cat_dims = categorize_tabnet_features(cfg, pd.concat([X_train, X_valid, X_test]))
@@ -189,7 +189,7 @@ def _main(cfg: DictConfig):
         y_preds = model(torch.from_numpy(X_test.to_numpy()).float().to(device))
         y_preds = torch.nn.functional.softmax(y_preds, dim=1).cpu().detach().numpy()[:, 1]
 
-    if cfg.models.working == "tabtransformer":
+    elif cfg.models.working == "tabtransformer":
         df_train = pd.concat([X_train, y_train], axis=1)
         df_valid = pd.concat([X_valid, y_valid], axis=1)
 
@@ -200,7 +200,7 @@ def _main(cfg: DictConfig):
 
         datamodule = TabularClassificationData.from_data_frame(
             categorical_fields=[*cfg.data.cat_features],
-            numerical_fields=[*cfg.data.num_features],
+            numerical_fields=[col for col in X_test.columns if col not in cfg.data.cat_features],
             target_fields=cfg.data.target,
             train_data_frame=df_train,
             val_data_frame=df_valid,

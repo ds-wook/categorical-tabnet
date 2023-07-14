@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+from hydra.utils import get_original_cwd
 from omegaconf import DictConfig
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -10,7 +11,7 @@ def load_credit_dataset(cfg: DictConfig) -> tuple[pd.DataFrame, pd.Series]:
     """
     Load train dataset
     """
-    df = pd.read_csv(Path(cfg.data.path) / cfg.data.train)
+    df = pd.read_csv(Path(get_original_cwd()) / cfg.data.path / cfg.data.train)
 
     for col in cfg.data.cat_features:
         le = LabelEncoder()

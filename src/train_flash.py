@@ -16,7 +16,7 @@ from models.encoder import CatBoostCategoricalEncoder
 from utils.evaluate import evaluate_metrics
 
 
-@hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
+@hydra.main(config_path="../config/", config_name="train")
 def _main(cfg: DictConfig):
     X_train, X_valid, X_test, y_train, y_valid, y_test = load_dataset(cfg)
     cb_encoder = CatBoostCategoricalEncoder(config=cfg)

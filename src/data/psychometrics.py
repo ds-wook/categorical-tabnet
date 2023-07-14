@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+from hydra.utils import get_original_cwd
 from omegaconf import DictConfig
 from sklearn.model_selection import train_test_split
 
@@ -12,7 +13,7 @@ def load_psychometrics_dataset(config: DictConfig) -> tuple[pd.DataFrame, pd.Ser
     """
     Load train dataset
     """
-    train = pd.read_csv(Path(config.data.path) / config.data.train)
+    train = pd.read_csv(Path(get_original_cwd()) / config.data.path / config.data.train)
     train = add_psychometrics_features(train)
     train_x = train.drop(columns=[*config.data.drop_features, config.data.target])
     train_y = 2 - train[config.data.target]

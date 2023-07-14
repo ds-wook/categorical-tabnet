@@ -12,7 +12,7 @@ from pytorch_tabnet.tab_model import TabNetClassifier
 from data.dataset import load_dataset
 
 
-@hydra.main(config_path="../config/", config_name="train", version_base="1.2.0")
+@hydra.main(config_path="../config/", config_name="train")
 def _main(cfg: DictConfig):
     _, _, X_test, _, _, _ = load_dataset(cfg)
     # define new model and load save parameters
