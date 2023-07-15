@@ -27,14 +27,9 @@ def _main(cfg: DictConfig):
     df_train = pd.concat([X_train, y_train], axis=1)
     df_valid = pd.concat([X_valid, y_valid], axis=1)
 
-    # for col in cfg.data.cat_features:
-    #     df_train[col] = df_train[col].astype(str)
-    #     X_valid[col] = X_valid[col].astype(str)
-    #     X_test[col] = X_test[col].astype(str)
-
     datamodule = TabularClassificationData.from_data_frame(
         categorical_fields=[*cfg.data.cat_features],
-        numerical_fields=[*cfg.data.num_features],
+        numerical_fields=[col for col in X_test.columns if col not in cfg.data.cat_features],
         target_fields=cfg.data.target,
         train_data_frame=df_train,
         val_data_frame=df_valid,
@@ -66,7 +61,7 @@ def _main(cfg: DictConfig):
     datamodule = TabularClassificationData.from_data_frame(
         predict_data_frame=X_test.fillna(0),
         parameters=datamodule.parameters,
-        batch_size=8,
+        batch_size=1,
     )
     y_preds = trainer.predict(model, datamodule=datamodule, output="probabilities")
     y_preds = np.array(list(chain(*y_preds)))[:, 1]

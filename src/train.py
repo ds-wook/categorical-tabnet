@@ -232,7 +232,7 @@ def _main(cfg: DictConfig):
         datamodule = TabularClassificationData.from_data_frame(
             predict_data_frame=X_test.fillna(0),
             parameters=datamodule.parameters,
-            batch_size=cfg.models.params.batch_size,
+            batch_size=1,
         )
         y_preds = trainer.predict(model, datamodule=datamodule, output=cfg.models.output)
         y_preds = np.array(list(chain(*y_preds)))[:, 1]

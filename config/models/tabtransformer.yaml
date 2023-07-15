@@ -6,7 +6,7 @@ results: tabtransformer-results
 params:
   backbone: tabtransformer
   lr: 0.02
-  batch_size: 8
+  batch_size: 32
   optimizer: adamax
   out_ff_activation: LeakyReLU
   num_attn_blocks: 14
@@ -14,5 +14,5 @@ params:
   ff_dropout: 0.2
   accumulate_grad_batches: 10
   gradient_clip_val: 1
-  max_epochs: 5
+  max_epochs: 50
 output: probabilities
