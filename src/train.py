@@ -187,7 +187,11 @@ def _main(cfg: DictConfig):
                 scheduler.step(val_epoch_acc / len(valid_loader))
 
         y_preds = model(torch.from_numpy(X_test.to_numpy()).float().to(device))
-        y_preds = torch.nn.functional.softmax(y_preds, dim=1).cpu().detach().numpy()[:, 1]
+        y_preds = (
+            torch.nn.functional.softmax(y_preds, dim=1).cpu().detach().numpy()
+            if cfg.models.task_type == "multiclass"
+            else torch.nn.functional.softmax(y_preds, dim=1).cpu().detach().numpy()[:, 1]
+        )
 
     elif cfg.models.working == "tabtransformer":
         df_train = pd.concat([X_train, y_train], axis=1)
