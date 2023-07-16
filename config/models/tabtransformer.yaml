@@ -14,5 +14,5 @@ params:
   ff_dropout: 0.2
   accumulate_grad_batches: 10
   gradient_clip_val: 1
-  max_epochs: 50
+  max_epochs: 5
 output: probabilities

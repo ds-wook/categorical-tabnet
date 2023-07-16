@@ -33,28 +33,28 @@ def _main(cfg: DictConfig):
         target_fields=cfg.data.target,
         train_data_frame=df_train,
         val_data_frame=df_valid,
-        batch_size=16,
+        batch_size=cfg.models.params.batch_size,
         predict_data_frame=X_test,
     )
 
     model = TabularClassifier.from_data(
         datamodule,
-        backbone="tabtransformer",
-        optimizer="adamax",
-        learning_rate=0.02,
         lr_scheduler=("StepLR", {"step_size": 250}),
-        out_ff_activation="LeakyReLU",
-        num_attn_blocks=14,
-        attn_dropout=0.2,
-        ff_dropout=0.2,
+        backbone=cfg.models.params.backbone,
+        optimizer=cfg.models.params.optimizer,
+        learning_rate=cfg.models.params.lr,
+        out_ff_activation=cfg.models.params.out_ff_activation,
+        num_attn_blocks=cfg.models.params.num_attn_blocks,
+        attn_dropout=cfg.models.params.attn_dropout,
+        ff_dropout=cfg.models.params.ff_dropout,
     )
 
     trainer = flash.Trainer(
-        max_epochs=50,
+        max_epochs=cfg.models.params.max_epochs,
         gpus=torch.cuda.device_count(),
         logger=CSVLogger(save_dir="log/"),
-        accumulate_grad_batches=10,
-        gradient_clip_val=0.1,
+        accumulate_grad_batches=cfg.models.params.accumulate_grad_batches,
+        gradient_clip_val=cfg.models.params.gradient_clip_val,
     )
     trainer.fit(model, datamodule=datamodule)
 
@@ -63,6 +63,7 @@ def _main(cfg: DictConfig):
         parameters=datamodule.parameters,
         batch_size=1,
     )
+
     y_preds = trainer.predict(model, datamodule=datamodule, output="probabilities")
     y_preds = np.array(list(chain(*y_preds)))[:, 1]
     assert len(X_test) == len(y_preds)
