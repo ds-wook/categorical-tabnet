@@ -65,8 +65,11 @@ def _main(cfg: DictConfig):
     )
 
     y_preds = trainer.predict(model, datamodule=datamodule, output="probabilities")
-    y_preds = np.array(list(chain(*y_preds)))[:, 1]
-    assert len(X_test) == len(y_preds)
+    y_preds = (
+        np.array(list(chain(*y_preds)))
+        if cfg.models.task_type == "multiclass"
+        else np.array(list(chain(*y_preds)))[:, 1]
+    )
 
     evaluate_metrics(cfg, y_test.to_numpy(), y_preds)
 

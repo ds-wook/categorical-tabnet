@@ -5,7 +5,7 @@ working: mlp
 results: 10fold-mlp-results.pkl
 multi_task: True
 num_epochs: 100
-batch_size: 64
+batch_size: 1024
 lr: 0.01
 seed: 42
 patience: 10

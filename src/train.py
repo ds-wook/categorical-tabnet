@@ -235,8 +235,11 @@ def _main(cfg: DictConfig):
             batch_size=1,
         )
         y_preds = trainer.predict(model, datamodule=datamodule, output=cfg.models.output)
-        y_preds = np.array(list(chain(*y_preds)))[:, 1]
-
+        y_preds = (
+            np.array(list(chain(*y_preds)))
+            if cfg.models.task_type == "multiclass"
+            else np.array(list(chain(*y_preds)))[:, 1]
+        )
     else:
         raise NotImplementedError
 
