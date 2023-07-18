@@ -31,7 +31,6 @@ from utils.utils import seed_everything
 @hydra.main(config_path="../config/", config_name="train")
 def _main(cfg: DictConfig):
     X_train, X_valid, X_test, y_train, y_valid, y_test = load_dataset(cfg)
-    cat_idxs, cat_dims = categorize_tabnet_features(cfg, pd.concat([X_train, X_valid, X_test]))
 
     if cfg.models.working == "xgboost":
         xgb_trainer = XGBoostTrainer(config=cfg)
@@ -62,6 +61,7 @@ def _main(cfg: DictConfig):
         )
 
     elif cfg.models.working == "tabnet":
+        cat_idxs, cat_dims = categorize_tabnet_features(cfg, pd.concat([X_train, X_valid, X_test]))
         tabnet_trainer = TabNetTrainer(config=cfg, cat_dims=cat_dims, cat_idxs=cat_idxs)
 
         tabnet_model = tabnet_trainer.train(X_train, y_train, X_valid, y_valid)
