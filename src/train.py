@@ -193,7 +193,7 @@ def _main(cfg: DictConfig):
             else torch.nn.functional.softmax(y_preds, dim=1).cpu().detach().numpy()[:, 1]
         )
 
-    elif cfg.models.working == "tabtransformer":
+    elif cfg.models.working == "transformer":
         df_train = pd.concat([X_train, y_train], axis=1)
         df_valid = pd.concat([X_valid, y_valid], axis=1)
 
@@ -212,16 +212,26 @@ def _main(cfg: DictConfig):
             predict_data_frame=X_test,
         )
 
-        model = TabularClassifier.from_data(
-            datamodule,
-            lr_scheduler=("StepLR", {"step_size": 250}),
-            backbone=cfg.models.params.backbone,
-            optimizer=cfg.models.params.optimizer,
-            learning_rate=cfg.models.params.lr,
-            out_ff_activation=cfg.models.params.out_ff_activation,
-            num_attn_blocks=cfg.models.params.num_attn_blocks,
-            attn_dropout=cfg.models.params.attn_dropout,
-            ff_dropout=cfg.models.params.ff_dropout,
+        model = (
+            TabularClassifier.from_data(
+                datamodule,
+                lr_scheduler=("StepLR", {"step_size": 250}),
+                backbone=cfg.models.params.backbone,
+                optimizer=cfg.models.params.optimizer,
+                learning_rate=cfg.models.params.lr,
+                out_ff_activation=cfg.models.params.out_ff_activation,
+                num_attn_blocks=cfg.models.params.num_attn_blocks,
+                attn_dropout=cfg.models.params.attn_dropout,
+                ff_dropout=cfg.models.params.ff_dropout,
+            )
+            if "transformer" in cfg.models.params.backbone
+            else TabularClassifier.from_data(
+                datamodule,
+                lr_scheduler=("StepLR", {"step_size": 250}),
+                backbone=cfg.models.params.backbone,
+                optimizer=cfg.models.params.optimizer,
+                learning_rate=cfg.models.params.lr,
+            )
         )
 
         trainer = flash.Trainer(
@@ -244,6 +254,7 @@ def _main(cfg: DictConfig):
             if cfg.models.task_type == "multiclass"
             else np.array(list(chain(*y_preds)))[:, 1]
         )
+
     else:
         raise NotImplementedError
 

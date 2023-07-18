@@ -1,15 +1,15 @@
 task_type: binary
 n_splits: 10
 path: res/models/
-working: tabtransformer
-results: tabtransformer-results
+working: transformer
+results: transformer-results
 params:
   backbone: tabtransformer
   lr: 0.02
   batch_size: 64
   optimizer: adamax
-  out_ff_activation: LeakyReLU
-  num_attn_blocks: 14
+  out_ff_activation: ReLU
+  num_attn_blocks: 10
   attn_dropout: 0.2
   ff_dropout: 0.2
   accumulate_grad_batches: 10
