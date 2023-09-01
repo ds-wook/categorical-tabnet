@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from data.dataset import TabularDataset, load_dataset
-from models.boosting import CatBoostTrainer, LightGBMTrainer, RandomForestTrainer, XGBoostTrainer
+from models.tree import CatBoostTrainer, LightGBMTrainer, RandomForestTrainer, XGBoostTrainer
 from models.callback import EarlyStoppingCallback
 from models.encoder import CatBoostCategoricalEncoder, categorize_tabnet_features
 from models.layer import MlpClassificationTrainer
