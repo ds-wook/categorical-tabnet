@@ -1,5 +1,8 @@
 # categorical-tabnet
-categorical tabnet research part
+[![License: Apache](https://img.shields.io/badge/License-Apache-yellow.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)  
+
+@ Code for Paper: categorical boosting based tabnet
 
 ## Abstract
 Recent deep learning models perform well in image and natural language processing. 
@@ -13,14 +16,13 @@ In the case of this model, the pre-processing of categorical variable data was w
 | Model Architecture |
 |:-:|
 | ![Model-Architecture](https://github.com/ds-wook/categorical-tabnet/assets/46340424/fd129cc1-390f-4b9c-af8d-d9efd6db71de) |
-
-
+|The model was designed to train on distinct categorical and numerical datasets. Fig. illustrates the transformation of the categorical dataset into numerical data through the utilization of the CatBoost encoder. The transformed numerical data, alongside the batch-normalized numerical data, were then trained with the TabNet encoder to yield the final outcomes.|
 
 ## Experiments
 | Results |
 |:-:|
 | ![image](https://github.com/ds-wook/categorical-tabnet/assets/46340424/7ece9f95-fe75-4f30-b1e7-d0c66cb13e23) |
-| Categorical boosting demonstrates superior performance compared to TabNet and exhibits excellent results across diverse datasets. |
+| Categorical boosting demonstrates superior performance compared to TabNet and exhibits excellent results across diverse datasets.|
 
 ## Interpretability
 | Mask |
