@@ -5,7 +5,7 @@ from hydra.utils import get_original_cwd
 from omegaconf import DictConfig
 from sklearn.model_selection import train_test_split
 
-from features.engineering import change_numeric2category
+from features.base import change_numeric2category
 
 
 def load_shrutime_dataset(config: DictConfig) -> tuple[pd.DataFrame, pd.Series]:

@@ -5,7 +5,7 @@ from hydra.utils import get_original_cwd
 from omegaconf import DictConfig
 from sklearn.model_selection import train_test_split
 
-from features.engineering import categorize_train_features
+from features.base import categorize_train_features
 from features.psychometrics import add_psychometrics_features
 
 
