@@ -1,7 +1,6 @@
 import itertools
 import os
 import random
-from typing import NoReturn
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,7 +32,7 @@ def plot_confusion_matrix(cm, classes, normalize, title, cmap):
     plt.xlabel("Predicted label")
 
 
-def seed_everything(seed: int = 42) -> NoReturn:
+def seed_everything(seed: int = 42):
     os.environ["PYTHONASHSEED"] = str(seed)
     random.seed(seed)
     np.random.seed(seed)
