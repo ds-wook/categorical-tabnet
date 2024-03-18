@@ -28,26 +28,18 @@ def load_dataset(cfg: DictConfig) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFr
     """
     Load train dataset
     """
-    if cfg.data.name == "census":
-        X_train, X_valid, X_test, y_train, y_valid, y_test = load_census_dataset(cfg)
+    dataset_loaders = {
+        "census": load_census_dataset(cfg),
+        "covtype": load_covtype_dataset(cfg),
+        "shrutime": load_shrutime_dataset(cfg),
+        "psychometrics": load_psychometrics_dataset(cfg),
+        "rossmann": load_rossmann_dataset(cfg),
+        "telco": load_telco_dataset(cfg),
+        "credit": load_credit_dataset(cfg),
+    }
 
-    elif cfg.data.name == "covtype":
-        X_train, X_valid, X_test, y_train, y_valid, y_test = load_covtype_dataset(cfg)
-
-    elif cfg.data.name == "shrutime":
-        X_train, X_valid, X_test, y_train, y_valid, y_test = load_shrutime_dataset(cfg)
-
-    elif cfg.data.name == "psychometrics":
-        X_train, X_valid, X_test, y_train, y_valid, y_test = load_psychometrics_dataset(cfg)
-
-    elif cfg.data.name == "rossmann":
-        X_train, X_valid, X_test, y_train, y_valid, y_test = load_rossmann_dataset(cfg)
-
-    elif cfg.data.name == "telco":
-        X_train, X_valid, X_test, y_train, y_valid, y_test = load_telco_dataset(cfg)
-
-    elif cfg.data.name == "credit":
-        X_train, X_valid, X_test, y_train, y_valid, y_test = load_credit_dataset(cfg)
+    if dataset := dataset_loaders.get(cfg.data.name):
+        X_train, X_valid, X_test, y_train, y_valid, y_test = dataset
 
     else:
         raise ValueError(f"Dataset {cfg.data.name} not supported")
