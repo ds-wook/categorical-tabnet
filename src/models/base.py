@@ -3,7 +3,7 @@ from __future__ import annotations
 import gc
 import pickle
 import warnings
-from abc import ABCMeta, abstractclassmethod
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, NoReturn
@@ -28,12 +28,12 @@ class ModelResult:
     models: dict[str, Any]
 
 
-class BaseEncoder(metaclass=ABCMeta):
+class BaseEncoder(ABC):
     def __init__(self, config: DictConfig):
         self.config = config
         self.path = Path(get_original_cwd()) / config.data.encoder
 
-    @abstractclassmethod
+    @abstractmethod
     def _fit(self, train_transform: pd.Series, train_y: pd.Series) -> NoReturn:
         raise NotImplementedError
 
@@ -72,13 +72,13 @@ class BaseEncoder(metaclass=ABCMeta):
         return test_x
 
 
-class BaseModel(metaclass=ABCMeta):
+class BaseModel(ABC):
     def __init__(self, config: DictConfig):
         self.config = config
         self._num_fold_iter = 0
         self.oof_preds = None
 
-    @abstractclassmethod
+    @abstractmethod
     def _fit(
         self,
         X_train: pd.DataFrame,
@@ -144,11 +144,15 @@ class BaseModel(metaclass=ABCMeta):
                 oof_preds[valid_idx] = (
                     model.predict(x_valid)
                     if isinstance(model, lgb.Booster)
-                    else model.predict(xgb.DMatrix(x_valid))
-                    if isinstance(model, xgb.Booster)
-                    else model.predict_proba(np.array(x_valid))
-                    if isinstance(model, TabNetMultiTaskClassifier)
-                    else model.predict_proba(x_valid)
+                    else (
+                        model.predict(xgb.DMatrix(x_valid))
+                        if isinstance(model, xgb.Booster)
+                        else (
+                            model.predict_proba(np.array(x_valid))
+                            if isinstance(model, TabNetMultiTaskClassifier)
+                            else model.predict_proba(x_valid)
+                        )
+                    )
                 )
 
                 del x_train, y_train, x_valid, y_valid, model
@@ -162,11 +166,15 @@ class BaseModel(metaclass=ABCMeta):
                 oof_preds[valid_idx] = (
                     model.predict(x_valid)
                     if isinstance(model, lgb.Booster)
-                    else model.predict(xgb.DMatrix(x_valid))
-                    if isinstance(model, xgb.Booster)
-                    else model.predict_proba(np.array(x_valid))
-                    if isinstance(model, TabNetMultiTaskClassifier)
-                    else model.predict_proba(x_valid)
+                    else (
+                        model.predict(xgb.DMatrix(x_valid))
+                        if isinstance(model, xgb.Booster)
+                        else (
+                            model.predict_proba(np.array(x_valid))
+                            if isinstance(model, TabNetMultiTaskClassifier)
+                            else model.predict_proba(x_valid)
+                        )
+                    )
                 )
 
                 del x_train, y_train, x_valid, y_valid, model
